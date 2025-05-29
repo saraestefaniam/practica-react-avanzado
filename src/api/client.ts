@@ -4,10 +4,10 @@ export const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-export const setAuthorizationHeader = (accessToken: string) => {
-  client.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
+export const setAuthorizationHeader = (accesToken: string) => {
+  client.defaults.headers["Authorization"] = `Bearer ${accesToken}`;
 };
 
 export const removeAuthorizationHeader = () => {
-  delete client.defaults.headers["Authorization"];
+  delete client.defaults.headers.common["Authorization"];
 };

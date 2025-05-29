@@ -13,7 +13,7 @@ export const getAdvertById = (id: string) => {
 export const createAdvert = (formData: FormData) => {
   return client.post("/api/v1/adverts", formData, {
     headers: {
-      "Content-Type": "multipar/form-data",
+      "Content-Type": "multipart/form-data",
     },
   });
 };

@@ -21,7 +21,7 @@ function AuthProvider({ defaultIsLogged, children }: AuthProviderProps) {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token ")
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token")
     if (token) {
       setAuthorizationHeader(token)
       setIsLogged(true)
