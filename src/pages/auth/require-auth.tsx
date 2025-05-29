@@ -1,5 +1,19 @@
-const RequireAuth = () => {
-    return <h1>You have to login</h1>
+import type { ReactNode } from "react"
+import { useAuth  } from "./auth-context"
+import { Navigate } from "react-router"
+
+interface RequireAuthProps {
+    children: ReactNode
 }
 
-export default RequireAuth
+const RequireAuth = ({ children }: RequireAuthProps) => {
+  const auth = useAuth();
+
+  if (!auth) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+export default RequireAuth;
