@@ -2,7 +2,6 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "./auth-context";
 import TheForm from "../../components/UI/form";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { client, setAuthorizationHeader } from "../../api/client";
 
 const LoginPage = () => {
