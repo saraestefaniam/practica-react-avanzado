@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAdverts } from "./advert-service";
+import { Link } from "react-router-dom";
 
 interface Advert {
   id: string;
@@ -26,7 +27,12 @@ function AdvertsPage() {
   }, []);
 
   if (adverts.length === 0) {
-    return <p>There are no ads available.</p>;
+    return (
+      <div>
+        <p>There are no ads available.</p>
+        <p>Be the first to create one! <Link to ="/adverts/new"></Link></p>
+      </div>
+    )
   }
 
   return (
