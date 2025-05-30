@@ -18,8 +18,21 @@ function App() {
         </Suspense>
       }
       />
-      <Route path="/adverts" element={<AdvertsPage />}></Route>
-      <Route path="/adverts/:id" element={<AdvertsPage />}></Route>
+      <Route 
+      path="/adverts" 
+      element={
+        <RequireAuth>
+          <AdvertsPage />
+        </RequireAuth>
+      }
+      />
+      <Route 
+      path="/adverts/:id" 
+      element={
+        <RequireAuth>
+          <AdvertsPage />
+        </RequireAuth>
+      } />
       <Route
       path="/adverts/new"
       element={

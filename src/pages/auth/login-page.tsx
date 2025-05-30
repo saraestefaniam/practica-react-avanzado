@@ -3,6 +3,7 @@ import { useAuth } from "./auth-context";
 import TheForm from "../../components/UI/form";
 import { useNavigate } from "react-router-dom";
 import { client, setAuthorizationHeader } from "../../api/client";
+import storage from "../../utils/storage";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -23,13 +24,17 @@ const LoginPage = () => {
         email,
         password,
       });
-      const token = response.data.token;
+      const token = response.data.accessToken;
+      storage.set("auth", token)
 
+
+      /*
       if (rememberUser) {
         localStorage.setItem("token", token);
       } else {
         sessionStorage.setItem("token", token);
-      }
+      }*/
+     
       setAuthorizationHeader(token);
       onLogin();
       navigate("/adverts");

@@ -7,7 +7,7 @@ import AuthProvider from "./pages/auth/auth-provider.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider defaultIsLogged={false}>
+      <AuthProvider>
         <App />
       </AuthProvider>
     </BrowserRouter>
