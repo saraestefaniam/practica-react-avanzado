@@ -1,23 +1,34 @@
 type StorageKey = "auth";
+type StorageType = "local" | "session";
 
 export default {
   get(key: StorageKey) {
-    const value = localStorage.getItem(key);
-    if (!value) {
-      return null;
+    const localValue = localStorage.getItem(key);
+    if (localValue) {
+      return localValue;
     }
-    return value;
+    const sessionValue = sessionStorage.getItem(key);
+    return sessionValue;
   },
 
-  set(key: StorageKey, value: string) {
-    localStorage.setItem(key, value);
+  set(key: StorageKey, value: string, type: StorageType = "local") {
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+
+    if (type === "local") {
+      localStorage.setItem(key, value);
+    } else {
+      sessionStorage.setItem(key, value);
+    }
   },
 
   remove(key: StorageKey) {
     localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   },
 
   clear() {
     localStorage.clear();
+    sessionStorage.clear();
   },
 };
