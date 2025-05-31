@@ -32,12 +32,12 @@ const LoginPage = () => {
       storage.set("auth", token)
 
 
-      /*
+      
       if (rememberUser) {
         localStorage.setItem("token", token);
       } else {
         sessionStorage.setItem("token", token);
-      }*/
+      }
      
       setAuthorizationHeader(token);
       onLogin();

@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAdverts, getAdvertsTags } from "./advert-service";
 import { Link } from "react-router-dom";
-
-interface Advert {
-  id: string;
-  name: string;
-  price: number;
-  sale: boolean;
-  tags: string[];
-  photo?: string;
-}
+import type { Advert } from "./types";
 
 function AdvertsPage() {
   const [adverts, setAdverts] = useState<Advert[]>([]);
