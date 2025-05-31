@@ -118,7 +118,7 @@ function AdvertsPage() {
         <ul>
         {adverts.map((advert) => (
           <li key={advert.id}>
-            <h2><Link to={`/adverts/:${advert.id}`}>{advert.name}</Link></h2>
+            <h2><Link to={`/adverts/${advert.id}`}>{advert.name}</Link></h2>
             <p>Price: {advert.price}</p>
             <p>{advert.sale ? "On sale" : "To buy"}</p>
             <p>Tags: {advert.tags.join(", ")}</p>
