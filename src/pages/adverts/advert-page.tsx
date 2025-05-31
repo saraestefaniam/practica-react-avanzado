@@ -43,6 +43,7 @@ function AdvertPage() {
       <p>Price: {advert.price}</p>
       <p>{advert.sale ? "On sale" : "To buy"}</p>
       <p>Tags: {advert.tags.join(", ")}</p>
+      <img src={advert.photo ? advert.photo: "https://st.depositphotos.com/2934765/53192/v/450/depositphotos_531920820-stock-illustration-photo-available-vector-icon-default.jpg"}/>
 
       <button onClick={() => setShowModal(true)}>Delete advert</button>
       {showModal && (

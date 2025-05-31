@@ -15,6 +15,9 @@ function Header({}) {
         </Link>
 
         <nav className="nav">
+            <NavLink to="/adverts" className="nav-link">
+                Adverts
+            </NavLink>
             <NavLink to="/adverts/new" className="nav-link">
                 New Advert
             </NavLink>
