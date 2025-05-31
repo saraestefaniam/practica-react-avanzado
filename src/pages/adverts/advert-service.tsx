@@ -23,5 +23,5 @@ export const deleteAdvert = (id: string) => {
 };
 
 export const getAdvertsTags = () => {
-  return client.get("/api/v1/adverts/tags");
+  return client.get<string[]>("/api/v1/adverts/tags");
 };
