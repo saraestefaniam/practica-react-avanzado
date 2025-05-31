@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useAuth } from "./auth-context";
 import TheForm from "../../components/UI/form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { client, setAuthorizationHeader } from "../../api/client";
 import storage from "../../utils/storage";
 
@@ -11,7 +11,11 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const { onLogin } = useAuth();
+  const { isLogged, onLogin } = useAuth();
+
+  if(isLogged) {
+    return <Navigate to="/adverts" replace />
+  }
 
   //desestructurando
   const { email, password } = credentials;

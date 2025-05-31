@@ -1,0 +1,42 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem, 2rem;
+    border-bottom: 1px, solid, black;
+}
+
+.logo img {
+    display: block;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.nav-button-session {
+    background-color: #39d2a6;
+    color: black;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.nav-button-session:hover{
+    background-color: aliceblue;
+}
