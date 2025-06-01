@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Aquí puedes añadir tus propios estilos CSS personalizados si los necesitas */
+/* Por ejemplo, si tenías los estilos para el sticky footer, los puedes dejar aquí */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+
+/* Y si quieres algún estilo base que no esté en Tailwind, va aquí */
+body {
+  font-family: Arial, sans-serif;
+}
