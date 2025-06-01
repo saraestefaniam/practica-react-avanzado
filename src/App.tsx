@@ -4,6 +4,7 @@ import AdvertsPage from "./pages/adverts/adverts-page";
 import RequireAuth from "./pages/auth/require-auth";
 import AdvertPage from "./pages/adverts/advert-page";
 import Layout from './components/layout/layout';
+import NotFoundPage from "./pages/not-found";
 
 const LoginPage = lazy(() => import("./pages/auth/login-page"));
 
@@ -47,7 +48,7 @@ function App() {
         }
         />
         <Route path="/" element={<Navigate to="/adverts" />} />
-        <Route path="/not-found" element={<div>404 | Not Found</div>} /> 
+        <Route path="/not-found" element={<NotFoundPage />} /> 
         <Route path="*" element={<Navigate to="/not-found" />} />
       </Route>
     </Routes>
