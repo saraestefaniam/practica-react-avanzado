@@ -2,8 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "./auth-context";
 import TheForm from "../../components/UI/form";
 import { Navigate, useNavigate } from "react-router-dom";
-import { client, setAuthorizationHeader } from "../../api/client";
-import storage from "../../utils/storage";
+import { client } from "../../api/client";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -29,16 +28,16 @@ const LoginPage = () => {
         password,
       });
       const token = response.data.accessToken;
-      storage.set("auth", token);
+      // storage.set("auth", token);
 
-      if (rememberUser) {
-        localStorage.setItem("token", token);
-      } else {
-        sessionStorage.setItem("token", token);
-      }
+      // if (rememberUser) {
+      //   localStorage.setItem("token", token);
+      // } else {
+      //   sessionStorage.setItem("token", token);
+      // }
 
-      setAuthorizationHeader(token);
-      onLogin();
+      // setAuthorizationHeader(token);
+      onLogin(token, rememberUser);
       navigate("/adverts");
     } catch (err) {
       console.error(err);

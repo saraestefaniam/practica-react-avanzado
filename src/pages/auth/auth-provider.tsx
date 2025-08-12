@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { AuthContext } from "./auth-context";
 import { removeAuthorizationHeader, setAuthorizationHeader } from "../../api/client";
 import storage from "../../utils/storage";
@@ -8,43 +8,28 @@ interface AuthProviderProps {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [isLogged, setIsLogged] = useState(() => {
-    return !!storage.get("auth")
-  });
+  const token = storage.get("auth");
+  if (token) {
+    setAuthorizationHeader(token)
+  }
+  
+  const [isLogged, setIsLogged] = useState(!!token)
 
-  useEffect(() => {
-    if (isLogged) {
-      const token = storage.get("auth")
-      if (token) {
-        setAuthorizationHeader(token)
-      }
-    } else {
-      removeAuthorizationHeader();
+  const handleLogin = (token: string, remember: boolean) => {
+    setIsLogged(true)
+
+    if (remember) {
+      storage.set("auth", token)
     }
-  }, [isLogged])
 
-  //const [isLoading, setIsLoading] = useState(true)
-
-  /*useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token")
-    if (token) {
-      setAuthorizationHeader(token)
-      setIsLogged(true)
-    } else {
-      removeAuthorizationHeader()
-    }
-    setIsLoading(false)
-  }, [])*/
-
-  const handleLogin = () => setIsLogged(true)
+    setAuthorizationHeader(token)
+  }
 
   const handleLogout = () => {
     setIsLogged(false)
     storage.remove("auth")
     removeAuthorizationHeader()
   }
-
-  /*if (isLoading) return <div>Checking session...</div>*/
 
   const authValue = {
     isLogged,
