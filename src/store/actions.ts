@@ -18,6 +18,10 @@ type AuthLogout = {
     type: "auth/logout"
 }
 
+type UiResetError = {
+    type: "ui/reset-error"
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -57,3 +61,4 @@ export type Actions =
 | AuthLoginPending
 | AuthLoginRejected
 | AuthLogout
+| UiResetError
