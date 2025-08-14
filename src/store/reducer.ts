@@ -21,6 +21,8 @@ export function authReducer(state = defaultState.auth, action: Actions): State["
     switch (action.type) {
         case "auth/login/fulfilled":
             return true
+        case "auth/logout":
+            return false;
         default:
             return state;
     }

@@ -45,6 +45,13 @@ export function authLogin(credentials: {username: string; password: string}): Ap
     }
 }
 
+export function authLogout(): AppThunk<Promise<void>> {
+    return async function(dispatch, _getstate, { api }) {
+        await api.auth.logout()
+        dispatch({type: "auth/logout"})
+    }
+}
+
 export type Actions = 
 | AuthLoginFulfilled
 | AuthLoginPending
