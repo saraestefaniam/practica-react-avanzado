@@ -7,12 +7,12 @@ import * as auth from "../pages/auth/service";
 import * as adverts from "../pages/adverts/advert-service";
 import type { Actions } from "./actions";
 
-export type RootState = State;
-
 const rootReducer = combineReducers({
   auth: authReducer,
   adverts: advertsReducers,
 });
+
+export type RootState = State
 
 type TheExtraArgument = { api: { auth: typeof auth; adverts: typeof adverts } };
 
@@ -32,7 +32,7 @@ const timestamp = (store) => (next) => (action) => {
 export default function configureStore(preloadedState?: Partial<RootState>) {
   const store = createStore(
     rootReducer,
-    preloadedState,
+    preloadedState as never,
     // // @ts-expect-error: import devtools extension
     // window.__REDUX_DEVTOOLS_EXTENSION__ &&
     //  // @ts-expect-error: import devtools extension

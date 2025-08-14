@@ -1,5 +1,6 @@
 import type { AppThunk } from "."
 
+//types
 type AuthLoginPending = {
     type: "auth/login/pending"
 }
@@ -17,6 +18,7 @@ type AuthLogout = {
     type: "auth/logout"
 }
 
+//actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
 })
@@ -30,6 +32,7 @@ export const authLoginRejected = (error: Error): AuthLoginRejected => ({
     payload: error
 })
 
+//thunks
 export function authLogin(credentials: {username: string; password: string}): AppThunk {
     return async function(dispatch, _getState, { api }) {
         dispatch(authLoginPending())
