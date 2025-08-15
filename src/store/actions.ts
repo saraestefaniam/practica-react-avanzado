@@ -36,6 +36,10 @@ export const authLoginRejected = (error: Error): AuthLoginRejected => ({
     payload: error
 })
 
+export const uiResetError = (): UiResetError => ({
+    type: "ui/reset-error"
+})
+
 //thunks
 export function authLogin(credentials: {username: string; password: string}): AppThunk {
     return async function(dispatch, _getState, { api }) {
@@ -55,6 +59,8 @@ export function authLogout(): AppThunk<Promise<void>> {
         dispatch({type: "auth/logout"})
     }
 }
+
+
 
 export type Actions = 
 | AuthLoginFulfilled

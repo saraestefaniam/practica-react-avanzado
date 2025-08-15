@@ -6,13 +6,13 @@ import type { State } from "./reducer";
 import * as auth from "../pages/auth/service";
 import * as adverts from "../pages/adverts/advert-service";
 import type { Actions } from "./actions";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
   adverts: advertsReducers,
 });
-
-export type RootState = State
 
 type TheExtraArgument = { api: { auth: typeof auth; adverts: typeof adverts } };
 
@@ -29,7 +29,7 @@ const timestamp = (store) => (next) => (action) => {
   return next(nextAction);
 };
 
-export default function configureStore(preloadedState?: Partial<RootState>) {
+export default function configureStore(preloadedState?: Partial<State>) {
   const store = createStore(
     rootReducer,
     preloadedState as never,
@@ -39,7 +39,7 @@ export default function configureStore(preloadedState?: Partial<RootState>) {
     //  window.__REDUX_DEVTOOLS_EXTENSION__(),
     composeWithDevTools(
       applyMiddleware(
-        thunk.withExtraArgument<RootState, Actions, TheExtraArgument>({
+        thunk.withExtraArgument<State, Actions, TheExtraArgument>({
           api: { auth, adverts },
         }),
         timestamp,
@@ -51,7 +51,13 @@ export default function configureStore(preloadedState?: Partial<RootState>) {
 }
 
 export type AppStore = ReturnType<typeof configureStore>;
+export type AppGetState = AppStore["getState"]
+export type RootState = ReturnType<AppGetState>
 export type AppDispatch = AppStore["dispatch"];
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
+export const useAppSelector = useSelector.withTypes<RootState>()
+
 export type AppThunk<ReturnType = void> = thunk.ThunkAction<
   ReturnType,
   RootState,
