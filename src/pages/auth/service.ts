@@ -1,7 +1,7 @@
 import { client, setAuthorizationHeader } from "../../api/client";
 import storage from "../../utils/storage";
 
-export async function login(credentials: { username: string; password: string }) {
+export async function login(credentials: { email: string; password: string }) {
   const { data } = await client.post("/login", credentials);
   
   // Guardar token

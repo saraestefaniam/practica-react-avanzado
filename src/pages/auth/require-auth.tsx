@@ -1,16 +1,19 @@
 import type { ReactNode } from "react"
-import { useAuth  } from "./auth-context"
+//import { useAuth  } from "./auth-context"
 import { Navigate } from "react-router"
+import { useAuth as useAuthHook } from "../../store/hooks"
+import { useLocation } from "react-router-dom";
 
 interface RequireAuthProps {
     children: ReactNode
 }
 
 const RequireAuth = ({ children }: RequireAuthProps) => {
-  const auth = useAuth();
+  const isLogged = useAuthHook();
+  const location = useLocation();
 
-  if (!auth.isLogged) {
-    return <Navigate to="/login" />;
+  if (!isLogged) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;

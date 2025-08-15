@@ -8,7 +8,7 @@ export function useAuth() {
 
 export function useLoginAction() {
     const dispatch = useAppDispatch()
-    return function (credentials: {username: string, password: string}) {
+    return function (credentials: {email: string, password: string}) {
         return dispatch(authLogin(credentials))
     }
 }

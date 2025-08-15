@@ -46,7 +46,7 @@ export function advertsReducers(
   return state;
 }
 
-export function ui(state = defaultState.ui, action: Actions): State["ui"] {
+export function uiReducer(state = defaultState.ui, action: Actions): State["ui"] {
   switch (action.type) {
     case "auth/login/pending":
       return { pending: true, error: null };

@@ -41,7 +41,7 @@ export const uiResetError = (): UiResetError => ({
 })
 
 //thunks
-export function authLogin(credentials: {username: string; password: string}): AppThunk {
+export function authLogin(credentials: {email: string; password: string}): AppThunk {
     return async function(dispatch, _getState, { api }) {
         dispatch(authLoginPending())
         try {

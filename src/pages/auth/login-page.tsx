@@ -1,48 +1,33 @@
 import { useState, type FormEvent } from "react";
-import { useAuth } from "./auth-context";
+//import { useAuth } from "./auth-context";
 import TheForm from "../../components/UI/form";
 import { Navigate, useNavigate } from "react-router-dom";
-import { client } from "../../api/client";
+//import { client } from "../../api/client";
+import { useAuth as useAuthHook, useLoginAction, useUiResetError } from "../../store/hooks";
+import { useAppSelector } from "../../store";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [rememberUser, setRememberUser] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const { isLogged, onLogin } = useAuth();
+  const isLogged = useAuthHook();
+  const login = useLoginAction();
+  const resetError = useUiResetError();
+
+  const { pending, error } = useAppSelector((state) => state.ui)
 
   if (isLogged) {
     return <Navigate to="/adverts" replace />;
   }
 
-  //desestructurando
-  const { email, password } = credentials;
-  const disabled = !email || !password;
+  const disabled = !credentials.email || !credentials.password || pending
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    try {
-      const response = await client.post("/api/auth/login", {
-        email,
-        password,
-      });
-      const token = response.data.accessToken;
-      // storage.set("auth", token);
-
-      // if (rememberUser) {
-      //   localStorage.setItem("token", token);
-      // } else {
-      //   sessionStorage.setItem("token", token);
-      // }
-
-      // setAuthorizationHeader(token);
-      onLogin(token, rememberUser);
-      navigate("/adverts");
-    } catch (err) {
-      console.error(err);
-      setError("Invalid credentials");
-    }
+    resetError();
+    await login(credentials)
+    navigate("/adverts")
   }
 
   return (
@@ -58,7 +43,7 @@ const LoginPage = () => {
                         placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               label="email"
               type="email"
-              value={email}
+              value={credentials.email}
               onChange={(event) =>
                 setCredentials((prev) => ({
                   ...prev,
@@ -73,7 +58,7 @@ const LoginPage = () => {
                         placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               label="password"
               type="password"
-              value={password}
+              value={credentials.password}
               onChange={(event) =>
                 setCredentials((prev) => ({
                   ...prev,
@@ -114,9 +99,9 @@ const LoginPage = () => {
               focus:ring-indigo-500
               transition-colors duration-200
             ">
-            Login
+              {pending ? "Login in..." : "Login"}
           </button>
-          {error && <p>{error}</p>}
+          {error && <p className="text-red-500 mt-2">{error.message}</p>}
         </form>
       </div>
     </div>
