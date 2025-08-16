@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 //import { useAuth  } from "./auth-context"
-import { Navigate } from "react-router"
+import { Navigate } from "react-router-dom"
 import { useAuth as useAuthHook } from "../../store/hooks"
 import { useLocation } from "react-router-dom";
 

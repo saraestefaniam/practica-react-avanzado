@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [rememberUser, setRememberUser] = useState(false);
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const isLogged = useAuthHook();
   const login = useLoginAction();
   const resetError = useUiResetError();
@@ -27,7 +27,6 @@ const LoginPage = () => {
     event.preventDefault();
     resetError();
     await login(credentials)
-    navigate("/adverts")
   }
 
   return (
