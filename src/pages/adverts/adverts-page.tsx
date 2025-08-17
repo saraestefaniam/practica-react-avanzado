@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import { getAdverts, getAdvertsTags } from "./advert-service";
+import { getAdvertsTags } from "./advert-service";
 import { Link } from "react-router-dom";
-import type { Advert } from "./types";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getAdvertsSelector, getUi } from "../../store/selectors";
 import { advertsLoaded } from "../../store/actions";
 
 function AdvertsPage() {
-  // const dispatch = useAppDispatch()
-  // const adverts = useAppSelector(getAdvertsSelector)
-  // const { pending: uiPending, error: uiError } = useAppSelector(getUi)
-  const [adverts, setAdverts] = useState<Advert[]>([]);
-  const [loading, setLoading] = useState(true)
+  const dispatch = useAppDispatch()
+  const adverts = useAppSelector(getAdvertsSelector)
+  const loading = useAppSelector(getUi).pending
   
   const [searchAdvert, setSearchAdvert] = useState("")
   const [availableTags, setAvailableTags] = useState<string[]>([])
@@ -32,36 +29,8 @@ function AdvertsPage() {
 
 
   useEffect(() => {
-    //dispatch(advertsLoaded)
-    async function showAdverts() {
-      try {
-        setLoading(true)
-        
-        const filters: { name?: string, tags?:string} = {}
-
-        if(searchAdvert) {
-          filters.name = searchAdvert
-        }
-
-        if(selectedTags.length > 0) {
-          filters.tags = selectedTags.join(',')
-        }
-
-        const advertsResponse = await getAdverts(filters);
-        setAdverts(advertsResponse.data);
-      } catch (error) {
-        console.error("There was an error getting the ads", error);
-      } finally {
-        setLoading(false)
-      }
-    }
-    const handler = setTimeout(() => {
-      showAdverts();
-    }, 300)
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [searchAdvert, selectedTags]);
+    dispatch(advertsLoaded())
+  }, [dispatch])
 
   //controlling filter for name
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +51,8 @@ function AdvertsPage() {
     return <p>Loading ads...</p>
   }
 
+  const filteredAdverts = adverts.filter(advert => 
+    advert.name.toLocaleLowerCase().includes(searchAdvert.toLocaleLowerCase()))
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
@@ -126,7 +97,7 @@ function AdvertsPage() {
         </div>
       ): (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {adverts.map((advert) => (
+        {filteredAdverts.map((advert) => (
           <Link key={advert.id} to={`/adverts/${advert.id}`} className="
               block
               bg-white
