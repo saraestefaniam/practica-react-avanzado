@@ -1,10 +1,12 @@
 import {Link, NavLink} from "react-router-dom";
 import logo from "../../assets/forma-abstracta-black.png"
 import "./header.css"
-import { useAuth } from "../../pages/auth/auth-context";
+import { useAuth as useAuthHook, useLogoutAction } from '../../store/hooks';
+
 
 function Header({}) {
-    const { isLogged, onLogout } = useAuth();
+    const isLogged = useAuthHook();
+    const onLogout = useLogoutAction()
 
     return (
     <header className="header">

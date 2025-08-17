@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { getAdverts, getAdvertsTags } from "./advert-service";
 import { Link } from "react-router-dom";
 import type { Advert } from "./types";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { getAdvertsSelector, getUi } from "../../store/selectors";
+import { advertsLoaded } from "../../store/actions";
 
 function AdvertsPage() {
+  // const dispatch = useAppDispatch()
+  // const adverts = useAppSelector(getAdvertsSelector)
+  // const { pending: uiPending, error: uiError } = useAppSelector(getUi)
   const [adverts, setAdverts] = useState<Advert[]>([]);
   const [loading, setLoading] = useState(true)
   
@@ -26,6 +32,7 @@ function AdvertsPage() {
 
 
   useEffect(() => {
+    //dispatch(advertsLoaded)
     async function showAdverts() {
       try {
         setLoading(true)
