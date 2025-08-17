@@ -1,5 +1,6 @@
 import type { AppThunk } from "."
 import type { Advert } from "../pages/adverts/types"
+import { getAdvertSelector } from './selectors';
 
 //types
 type AuthLoginPending = {
@@ -37,6 +38,20 @@ type AdvertsLoadedRejected = {
     payload: Error;
 }
 
+type AdvertsDetailFulfilled = {
+    type: "adverts/detail/fulfilled";
+    payload: Advert
+}
+
+type AdvertsDetailPending = {
+    type: "adverts/detail/pending";
+}
+
+type AdvertsDetailRejected = {
+    type: "adverts/detail/rejected";
+    payload: Error;
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -66,6 +81,20 @@ export const advertsLoadedPending = (): AdvertsLoadedPending => ({
 
 export const advertsLoadedRejected = (error: Error): AdvertsLoadedRejected => ({
     type: "adverts/loaded/rejected",
+    payload: error
+})
+
+export const advertsDetailFulfilled = (advert: Advert): AdvertsDetailFulfilled => ({
+    type: "adverts/detail/fulfilled",
+    payload: advert
+})
+
+export const advertsDetailPending = (): AdvertsDetailPending => ({
+    type: "adverts/detail/pending"
+})
+
+export const advertsDetailRejected = (error: Error): AdvertsDetailRejected => ({
+    type: "adverts/detail/rejected",
     payload: error
 })
 
@@ -103,6 +132,26 @@ export function advertsLoaded(): AppThunk<Promise<void>> {
             if (error instanceof Error) {
                 dispatch(advertsLoadedRejected(error))
             }
+            throw error;
+        }
+    }
+}
+
+export function advertsDetail(advertId: string): AppThunk<Promise<void>> {
+    return async function (dispatch, getState, { api }) {
+        const state = getState()
+        if (getAdvertSelector(advertId)(state)) {
+            return
+        }
+        try {
+            dispatch(advertsDetailPending())
+            const advert = await api.adverts.getAdvertById(advertId)
+            dispatch(advertsDetailFulfilled(advert.data))
+        } catch (error) {
+            if (error instanceof Error) {
+                dispatch(advertsDetailRejected(error))
+            }
+            throw error;
         }
     }
 }
@@ -116,3 +165,6 @@ export type Actions =
 | AdvertsLoadedFulfilled
 | AdvertsLoadedPending
 | AdvertsLoadedRejected
+| AdvertsDetailFulfilled
+| AdvertsDetailPending
+| AdvertsDetailRejected
