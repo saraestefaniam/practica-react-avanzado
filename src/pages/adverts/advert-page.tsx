@@ -12,8 +12,6 @@ function AdvertPage() {
   const advert = useAppSelector(getAdvertSelector(id));
   const loading = useAppSelector(getUi).pending;
   const error = useAppSelector(getUi).error;
-  //const [advert, setAdvert] = useState<Advert | null>(null);
-  //const [error, setError] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {

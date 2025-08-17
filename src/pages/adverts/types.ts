@@ -6,7 +6,3 @@ export interface Advert {
   tags: string[];
   photo?: string;
 }
-
-export interface Tag {
-  name: string;
-}

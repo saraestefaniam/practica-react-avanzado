@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getAdvertsSelector, getUi } from "../../store/selectors";
-import { advertsLoaded, tags as tagsAction, tags } from '../../store/actions';
+import { advertsLoaded, tags as tagsAction } from '../../store/actions';
 
 function AdvertsPage() {
   const dispatch = useAppDispatch()
