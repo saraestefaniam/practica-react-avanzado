@@ -1,32 +1,30 @@
 import { useNavigate, useParams } from "react-router-dom";
-import type { Advert } from "./types";
 import { useEffect, useState } from "react";
-import { getAdvertById, deleteAdvert } from "./advert-service";
+import { deleteAdvert } from "./advert-service";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { getAdvertSelector, getUi } from "../../store/selectors";
+import { advertsDetail } from "../../store/actions";
 
 function AdvertPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [advert, setAdvert] = useState<Advert | null>(null);
-  const [error, setError] = useState(false);
+  const dispatch = useAppDispatch();
+  const advert = useAppSelector(getAdvertSelector(id));
+  const loading = useAppSelector(getUi).pending;
+  const error = useAppSelector(getUi).error;
+  //const [advert, setAdvert] = useState<Advert | null>(null);
+  //const [error, setError] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    async function showAdvertDetail() {
-      if (!id) {
-        navigate("/404", { replace: true });
-        return;
-      }
-
-      try {
-        const detailResponse = await getAdvertById(id);
-        setAdvert(detailResponse.data);
-      } catch (error) {
-        console.error("Error getting details", error);
-        setError(true);
-      }
+    if (!id) {
+      navigate("/404", { replace: true });
+      return;
     }
-    showAdvertDetail();
-  }, [id, navigate]);
+    dispatch(advertsDetail(id));
+  }, [dispatch, id, navigate]);
+
+  if (loading) return <p>Loading advert...</p>
 
   if (error) {
     navigate("/404", { replace: true });
@@ -34,7 +32,7 @@ function AdvertPage() {
   }
 
   if (!advert) {
-    return <p>Loading advert...</p>;
+    return <p>No advert found...</p>;
   }
 
   return (
@@ -123,7 +121,8 @@ function AdvertPage() {
                 >
                   Yes, delete
                 </button>
-                <button onClick={() => setShowModal(false)}
+                <button
+                  onClick={() => setShowModal(false)}
                   className="
                   py-2
                   px-4
@@ -139,7 +138,9 @@ function AdvertPage() {
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
                   transition-colors duration-200
                 "
-                >Cancel</button>
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
