@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { getAdvertsTags } from "./advert-service";
+//import { getAdvertsTags } from "./advert-service";
 import { useNavigate } from "react-router-dom";
-import { createAdvert } from "./advert-service";
+//import { createAdvert } from "./advert-service";
 import TheForm from "../../components/UI/form";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { tags as tagsAction, advertsCreate } from "../../store/actions";
+import { getUi } from "../../store/selectors";
 
 const NewAdvertPage = () => {
   const [name, setName] = useState("");
@@ -10,29 +13,26 @@ const NewAdvertPage = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [sale, setSale] = useState(true);
   const [photo, setPhoto] = useState<File | null>(null);
-  const [availableTags, setAvailableTags] = useState<string[]>([]);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const disabled = !name || !price || tags.length === 0;
+  const dispatch = useAppDispatch();
+  const tagsLoaded = useAppSelector((state) => state.tags.loaded);
+  const availableTags = useAppSelector((state) => state.tags.data);
+  const error = useAppSelector(getUi).error;
 
   useEffect(() => {
-    async function showTags() {
-      try {
-        const tagsResponse = await getAdvertsTags();
-        setAvailableTags(tagsResponse.data);
-      } catch (error) {
-        console.error("Error getting tags", error);
-      }
-    }
-    showTags();
-  }, []);
+    if (!tagsLoaded) dispatch(tagsAction());
+  }, [dispatch, tagsLoaded]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!name || !price || tags.length === 0) {
-      setError("Please complete all required fields");
-      return;
+      dispatch({ type: "ui/reset-error" });
+      return dispatch({
+        type: "adverts/created/rejected",
+        payload: new Error("Please complete all required fields"),
+      });
     }
 
     const formData = new FormData();
@@ -40,17 +40,14 @@ const NewAdvertPage = () => {
     formData.append("price", price.toString());
     formData.append("sale", sale.toString());
     tags.forEach((tag) => formData.append("tags", tag));
-
     if (photo) {
       formData.append("photo", photo);
     }
 
-    try {
-      const newAdvertResponse = await createAdvert(formData);
-      navigate(`/adverts/${newAdvertResponse.data.id}`);
-    } catch (error) {
-      console.error("Error creating advert", error);
-      setError("There was an error creating the advert");
+    const newAdvert = await dispatch(advertsCreate(formData));
+
+    if (newAdvert) {
+      navigate(`/adverts/${newAdvert.id}`);
     }
   };
 
@@ -162,7 +159,7 @@ const NewAdvertPage = () => {
             />
           </div>
 
-          <p className="text-red-500 text-sm mb-4">{error}</p>
+          <p className="text-red-500 text-sm mb-4">{error?.message}</p>
 
           <button
             type="submit"

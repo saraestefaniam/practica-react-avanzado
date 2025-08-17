@@ -234,7 +234,7 @@ export function advertsCreate(advertContent: FormData): AppThunk<Promise<Advert>
         try {
             dispatch(advertsCreatedPending())
             const createdAdvert = await api.adverts.createAdvert(advertContent)
-            const advert = await api.adverts.getAdvertById(createdAdvert.toString())
+            const advert = await api.adverts.getAdvertById(createdAdvert.data)
             dispatch(advertsCreatedFulfilled(advert.data))
             return advert.data
         } catch (error) {
