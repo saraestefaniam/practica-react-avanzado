@@ -41,20 +41,27 @@ export function authReducer(
 
 export function advertsReducers(
   state = defaultState.adverts,
-  action: any,
+  action: Actions,
 ): State["adverts"] {
+  switch (action.type) {
+    case "adverts/loaded/fulfilled":
+      return {loaded: true, data: action.payload}
+  }
   return state;
 }
 
 export function uiReducer(state = defaultState.ui, action: Actions): State["ui"] {
   switch (action.type) {
     case "auth/login/pending":
+    case "adverts/loaded/pending":
       return { pending: true, error: null };
 
     case "auth/login/fulfilled":
+    case "adverts/loaded/fulfilled":
       return { pending: false, error: null };
 
     case "auth/login/rejected":
+    case "adverts/loaded/rejected":
       return { pending: false, error: action.payload };
 
     case "ui/reset-error":

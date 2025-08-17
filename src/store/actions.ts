@@ -1,4 +1,5 @@
 import type { AppThunk } from "."
+import type { Advert } from "../pages/adverts/types"
 
 //types
 type AuthLoginPending = {
@@ -22,6 +23,20 @@ type UiResetError = {
     type: "ui/reset-error"
 }
 
+type AdvertsLoadedFulfilled = {
+    type: "adverts/loaded/fulfilled";
+    payload: Advert[]
+}
+
+type AdvertsLoadedPending = {
+    type: "adverts/loaded/pending"
+}
+
+type AdvertsLoadedRejected = {
+    type: "adverts/loaded/rejected";
+    payload: Error;
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -38,6 +53,20 @@ export const authLoginRejected = (error: Error): AuthLoginRejected => ({
 
 export const uiResetError = (): UiResetError => ({
     type: "ui/reset-error"
+})
+
+export const advertsLoadedFulfilled = (advert: Advert[]): AdvertsLoadedFulfilled => ({
+    type: "adverts/loaded/fulfilled",
+    payload: advert
+})
+
+export const advertsLoadedPending = (): AdvertsLoadedPending => ({
+    type: "adverts/loaded/pending",
+})
+
+export const advertsLoadedRejected = (error: Error): AdvertsLoadedRejected => ({
+    type: "adverts/loaded/rejected",
+    payload: error
 })
 
 //thunks
@@ -60,7 +89,23 @@ export function authLogout(): AppThunk<Promise<void>> {
     }
 }
 
-
+export function advertsLoaded(): AppThunk<Promise<void>> {
+    return async function (dispatch, getState, { api }) {
+        const state = getState()
+        if (state.adverts.loaded) {
+            return;
+        }
+        try {
+            dispatch(advertsLoadedPending())
+            const adverts = await api.adverts.getAdverts()
+            dispatch(advertsLoadedFulfilled(adverts.data))
+        } catch (error) {
+            if (error instanceof Error) {
+                dispatch(advertsLoadedRejected(error))
+            }
+        }
+    }
+}
 
 export type Actions = 
 | AuthLoginFulfilled
@@ -68,3 +113,6 @@ export type Actions =
 | AuthLoginRejected
 | AuthLogout
 | UiResetError
+| AdvertsLoadedFulfilled
+| AdvertsLoadedPending
+| AdvertsLoadedRejected
