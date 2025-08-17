@@ -66,6 +66,20 @@ type AdvertsTagsRejected = {
     payload: Error;
 }
 
+type AdvertsCreatedFulfilled = {
+    type: "adverts/created/fulfilled";
+    payload: Advert
+}
+
+type AdvertsCreatedPending = {
+    type: "adverts/created/pending"
+}
+
+type AdvertsCreatedRejected = {
+    type: "adverts/created/rejected"
+    payload: Error
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -123,6 +137,20 @@ export const advertsTagsPending = (): AdvertsTagsPending => ({
 
 export const advertsTagsRejected = (error: Error): AdvertsTagsRejected => ({
     type: "adverts/tags/rejected",
+    payload: error
+})
+
+export const advertsCreatedFulfilled = (advert: Advert): AdvertsCreatedFulfilled => ({
+    type: "adverts/created/fulfilled",
+    payload: advert
+})
+
+export const advertsCreatedPending = (): AdvertsCreatedPending => ({
+    type: "adverts/created/pending"
+})
+
+export const advertsCreatedRejected = (error: Error): AdvertsCreatedRejected => ({
+    type: "adverts/created/rejected",
     payload: error
 })
 
@@ -201,6 +229,23 @@ export function tags(): AppThunk<Promise<void>> {
     }
 }
 
+export function advertsCreate(advertContent: FormData): AppThunk<Promise<Advert>> {
+    return async function (dispatch, _getState, {api}) {
+        try {
+            dispatch(advertsCreatedPending())
+            const createdAdvert = await api.adverts.createAdvert(advertContent)
+            const advert = await api.adverts.getAdvertById(createdAdvert.toString())
+            dispatch(advertsCreatedFulfilled(advert.data))
+            return advert.data
+        } catch (error) {
+            if (error instanceof Error) {
+                dispatch(advertsCreatedRejected(error))
+            }
+            throw error;
+        }
+    }
+}
+
 export type Actions = 
 | AuthLoginFulfilled
 | AuthLoginPending
@@ -216,3 +261,6 @@ export type Actions =
 | AdvertsTagsFulfilled
 | AdvertsTagsPending
 | AdvertsTagsRejected
+| AdvertsCreatedFulfilled
+| AdvertsCreatedPending
+| AdvertsCreatedRejected

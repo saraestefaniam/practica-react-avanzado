@@ -56,8 +56,11 @@ export function advertsReducers(
       return { loaded: true, data: action.payload };
     case "adverts/detail/fulfilled":
       return { loaded: false, data: [action.payload] };
+    case "adverts/created/fulfilled":
+      return { ...state, data: [action.payload, ...(state.data ?? [])]}
+    default:
+      return state;
   }
-  return state;
 }
 
 export function uiReducer(
@@ -69,18 +72,21 @@ export function uiReducer(
     case "adverts/loaded/pending":
     case "adverts/detail/pending":
     case "adverts/tags/pending":
+    case "adverts/created/pending":
       return { pending: true, error: null };
 
     case "auth/login/fulfilled":
     case "adverts/loaded/fulfilled":
     case "adverts/detail/fulfilled":
     case "adverts/tags/fulfilled":
+    case "adverts/created/fulfilled":
       return { pending: false, error: null };
 
     case "auth/login/rejected":
     case "adverts/loaded/rejected":
     case "adverts/detail/rejected":
     case "adverts/tags/rejected":
+    case "adverts/created/rejected":
       return { pending: false, error: action.payload };
 
     case "ui/reset-error":
@@ -92,9 +98,8 @@ export function uiReducer(
 }
 
 export function tagsReducer(state = defaultState.tags, action: Actions): State["tags"] {
-  switch(action.type) {
-    case "adverts/tags/fulfilled":
-      return { loaded: true, data: action.payload}
+  if(action.type === "adverts/tags/fulfilled") {
+    return { loaded: true, data: action.payload}
   }
   return state;
 }
