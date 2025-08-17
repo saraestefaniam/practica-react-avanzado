@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import * as thunk from "redux-thunk";
 import { composeWithDevTools } from "@redux-devtools/extension";
-import { authReducer, advertsReducers, uiReducer } from "./reducer";
+import { authReducer, advertsReducers, uiReducer, tagsReducer } from "./reducer";
 import type { State } from "./reducer";
 import * as auth from "../pages/auth/service";
 import * as adverts from "../pages/adverts/advert-service";
@@ -13,6 +13,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   adverts: advertsReducers,
   ui: uiReducer,
+  tags: tagsReducer,
 });
 
 type TheExtraArgument = { api: { auth: typeof auth; adverts: typeof adverts } };

@@ -52,6 +52,20 @@ type AdvertsDetailRejected = {
     payload: Error;
 }
 
+type AdvertsTagsFulfilled = {
+    type: "adverts/tags/fulfilled"
+    payload: string[]
+}
+
+type AdvertsTagsPending = {
+    type: "adverts/tags/pending"
+}
+
+type AdvertsTagsRejected = {
+    type: "adverts/tags/rejected";
+    payload: Error;
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -95,6 +109,20 @@ export const advertsDetailPending = (): AdvertsDetailPending => ({
 
 export const advertsDetailRejected = (error: Error): AdvertsDetailRejected => ({
     type: "adverts/detail/rejected",
+    payload: error
+})
+
+export const advertsTagsFulfilled = (tag: string[]): AdvertsTagsFulfilled => ({
+    type: "adverts/tags/fulfilled",
+    payload: tag
+})
+
+export const advertsTagsPending = (): AdvertsTagsPending => ({
+    type: "adverts/tags/pending"
+})
+
+export const advertsTagsRejected = (error: Error): AdvertsTagsRejected => ({
+    type: "adverts/tags/rejected",
     payload: error
 })
 
@@ -156,6 +184,23 @@ export function advertsDetail(advertId: string): AppThunk<Promise<void>> {
     }
 }
 
+export function tags(): AppThunk<Promise<void>> {
+    return async function(dispatch, getState, { api }) {
+        const state = getState()
+        if (state.tags.loaded){
+            return;
+        }
+        try {
+            dispatch(advertsTagsPending())
+            const tags = await api.adverts.getAdvertsTags()
+            dispatch(advertsTagsFulfilled(tags.data))
+        } catch (error) {
+            if (error instanceof Error)
+            dispatch(advertsTagsRejected(error))
+        }
+    }
+}
+
 export type Actions = 
 | AuthLoginFulfilled
 | AuthLoginPending
@@ -168,3 +213,6 @@ export type Actions =
 | AdvertsDetailFulfilled
 | AdvertsDetailPending
 | AdvertsDetailRejected
+| AdvertsTagsFulfilled
+| AdvertsTagsPending
+| AdvertsTagsRejected
