@@ -1,31 +1,23 @@
 import { useEffect, useState } from "react";
-import { getAdvertsTags } from "./advert-service";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getAdvertsSelector, getUi } from "../../store/selectors";
-import { advertsLoaded } from "../../store/actions";
+import { advertsLoaded, tags as tagsAction, tags } from '../../store/actions';
 
 function AdvertsPage() {
   const dispatch = useAppDispatch()
   const adverts = useAppSelector(getAdvertsSelector)
   const loading = useAppSelector(getUi).pending
+  const availableTags = useAppSelector(state => state.tags.data)
+  const tagsLoaded = useAppSelector(state => state.tags.loaded) 
   
   const [searchAdvert, setSearchAdvert] = useState("")
-  const [availableTags, setAvailableTags] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   useEffect(() => {
-    async function showTags() {
-      try {
-        const tagsResponse = await getAdvertsTags()
-        setAvailableTags(tagsResponse.data)
-      } catch (error) {
-        console.error("Error getting tags", error)
-      }
-    }
-    showTags()
-  }, [])
-
+    if(!tagsLoaded)
+    dispatch(tagsAction())
+  }, [dispatch, tagsLoaded])
 
 
   useEffect(() => {
@@ -51,8 +43,14 @@ function AdvertsPage() {
     return <p>Loading ads...</p>
   }
 
-  const filteredAdverts = adverts.filter(advert => 
-    advert.name.toLocaleLowerCase().includes(searchAdvert.toLocaleLowerCase()))
+  const filteredAdverts = adverts.filter(advert => {
+      const matchesName = advert.name.toLocaleLowerCase().includes(searchAdvert.toLocaleLowerCase())
+      const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => advert.tags.includes(tag))
+    
+    return matchesName && matchesTags
+  })
+
+
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
