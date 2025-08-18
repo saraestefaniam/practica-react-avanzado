@@ -8,6 +8,10 @@ import { tags as tagsAction, advertsCreate } from "../../store/actions";
 import { getUi } from "../../store/selectors";
 
 const NewAdvertPage = () => {
+  const dispatch = useAppDispatch();
+  const tagsLoaded = useAppSelector((state) => state.tags.loaded);
+  const availableTags = useAppSelector((state) => state.tags.data);
+  const error = useAppSelector(getUi).error;
   const [name, setName] = useState("");
   const [price, setPrice] = useState(NaN);
   const [tags, setTags] = useState<string[]>([]);
@@ -15,10 +19,7 @@ const NewAdvertPage = () => {
   const [photo, setPhoto] = useState<File | null>(null);
   const navigate = useNavigate();
   const disabled = !name || !price || tags.length === 0;
-  const dispatch = useAppDispatch();
-  const tagsLoaded = useAppSelector((state) => state.tags.loaded);
-  const availableTags = useAppSelector((state) => state.tags.data);
-  const error = useAppSelector(getUi).error;
+
 
   useEffect(() => {
     if (!tagsLoaded) dispatch(tagsAction());

@@ -234,9 +234,9 @@ export function advertsCreate(advertContent: FormData): AppThunk<Promise<Advert>
         try {
             dispatch(advertsCreatedPending())
             const createdAdvert = await api.adverts.createAdvert(advertContent)
-            const advert = await api.adverts.getAdvertById(createdAdvert.data)
-            dispatch(advertsCreatedFulfilled(advert.data))
-            return advert.data
+            //const advert = await api.adverts.getAdvertById(createdAdvert.data)
+            dispatch(advertsCreatedFulfilled(createdAdvert.data))
+            return createdAdvert.data
         } catch (error) {
             if (error instanceof Error) {
                 dispatch(advertsCreatedRejected(error))
