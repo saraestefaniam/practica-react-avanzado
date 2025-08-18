@@ -59,7 +59,7 @@ export function advertsReducers(
     case "adverts/created/fulfilled":
       return { ...state, data: [action.payload, ...(state.data ?? [])]}
     case "adverts/deleted/fulfilled":
-      return { ...state, data: state.data.filter(advert => advert.id !== action.payload.id)}
+      return { ...state, data: state.data.filter(advert => advert.id !== action.payload)}
     default:
       return state;
   }
@@ -75,6 +75,7 @@ export function uiReducer(
     case "adverts/detail/pending":
     case "adverts/tags/pending":
     case "adverts/created/pending":
+    case "adverts/deleted/pending":
       return { pending: true, error: null };
 
     case "auth/login/fulfilled":
@@ -82,6 +83,7 @@ export function uiReducer(
     case "adverts/detail/fulfilled":
     case "adverts/tags/fulfilled":
     case "adverts/created/fulfilled":
+    case "adverts/deleted/fulfilled":
       return { pending: false, error: null };
 
     case "auth/login/rejected":
@@ -89,6 +91,7 @@ export function uiReducer(
     case "adverts/detail/rejected":
     case "adverts/tags/rejected":
     case "adverts/created/rejected":
+    case "adverts/deleted/rejected":
       return { pending: false, error: action.payload };
 
     case "ui/reset-error":

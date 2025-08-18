@@ -1,9 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { deleteAdvert } from "./advert-service";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getAdvertSelector, getUi } from "../../store/selectors";
-import { advertsDetail } from "../../store/actions";
+import { advertsDelete, advertsDetail } from "../../store/actions";
 
 function AdvertPage() {
   const { id } = useParams<{ id: string }>();
@@ -95,7 +94,7 @@ function AdvertPage() {
                 <button
                   onClick={async () => {
                     try {
-                      await deleteAdvert(advert.id);
+                      await dispatch(advertsDelete(advert.id));
                       navigate("/adverts");
                     } catch (error) {
                       console.error("Error deleting advert", error);

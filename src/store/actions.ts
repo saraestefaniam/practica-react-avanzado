@@ -82,7 +82,7 @@ type AdvertsCreatedRejected = {
 
 type AdvertsDeletedFulfilled = {
     type: "adverts/deleted/fulfilled"
-    payload: Advert
+    payload: string
 }
 
 type AdvertsDeletedPending = {
@@ -168,7 +168,7 @@ export const advertsCreatedRejected = (error: Error): AdvertsCreatedRejected => 
     payload: error
 })
 
-export const advertsDeletedFulfilled = (advert: Advert): AdvertsDeletedFulfilled => ({
+export const advertsDeletedFulfilled = (advert: string): AdvertsDeletedFulfilled => ({
     type: "adverts/deleted/fulfilled",
     payload: advert
 })
@@ -278,8 +278,8 @@ export function advertsDelete(advertToDelete: string): AppThunk<Promise<void>> {
     return async function (dispatch, _getState, {api}) {
         try {
             dispatch(advertsDeletedPending())
-            const deletedAdvert = await api.adverts.deleteAdvert(advertToDelete)
-            dispatch(advertsDeletedFulfilled(deletedAdvert.data))
+            await api.adverts.deleteAdvert(advertToDelete)
+            dispatch(advertsDeletedFulfilled(advertToDelete))
         } catch (error) {
             if (error instanceof Error) {
                 dispatch(advertsDeletedRejected(error))
