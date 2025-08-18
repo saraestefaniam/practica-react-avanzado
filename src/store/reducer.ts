@@ -59,7 +59,7 @@ export function advertsReducers(
     case "adverts/created/fulfilled":
       return { ...state, data: [action.payload, ...(state.data ?? [])]}
     case "adverts/deleted/fulfilled":
-      return { loaded: false, data: [action.payload]}
+      return { ...state, data: state.data.filter(advert => advert.id !== action.payload.id)}
     default:
       return state;
   }
