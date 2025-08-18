@@ -58,6 +58,8 @@ export function advertsReducers(
       return { loaded: false, data: [action.payload] };
     case "adverts/created/fulfilled":
       return { ...state, data: [action.payload, ...(state.data ?? [])]}
+    case "adverts/deleted/fulfilled":
+      return { loaded: false, data: [action.payload]}
     default:
       return state;
   }

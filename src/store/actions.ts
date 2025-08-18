@@ -80,6 +80,20 @@ type AdvertsCreatedRejected = {
     payload: Error
 }
 
+type AdvertsDeletedFulfilled = {
+    type: "adverts/deleted/fulfilled"
+    payload: Advert
+}
+
+type AdvertsDeletedPending = {
+    type: "adverts/deleted/pending"
+}
+
+type AdvertsDeletedRejected = {
+    type: "adverts/deleted/rejected"
+    payload: Error
+}
+
 //actions creators
 export const authLoginFulfilled = (): AuthLoginFulfilled => ({
     type: "auth/login/fulfilled"
@@ -154,6 +168,20 @@ export const advertsCreatedRejected = (error: Error): AdvertsCreatedRejected => 
     payload: error
 })
 
+export const advertsDeletedFulfilled = (advert: Advert): AdvertsDeletedFulfilled => ({
+    type: "adverts/deleted/fulfilled",
+    payload: advert
+})
+
+export const advertsDeletedPending = (): AdvertsDeletedPending => ({
+    type: "adverts/deleted/pending"
+})
+
+export const advertsDeletedRejected = (error: Error): AdvertsDeletedRejected => ({
+    type: "adverts/deleted/rejected",
+    payload: error
+})
+
 //thunks
 export function authLogin(credentials: {email: string; password: string}): AppThunk {
     return async function(dispatch, _getState, { api }) {
@@ -225,7 +253,7 @@ export function tags(): AppThunk<Promise<void>> {
         } catch (error) {
             if (error instanceof Error)
             dispatch(advertsTagsRejected(error))
-        }
+        } 
     }
 }
 
@@ -240,6 +268,21 @@ export function advertsCreate(advertContent: FormData): AppThunk<Promise<Advert>
         } catch (error) {
             if (error instanceof Error) {
                 dispatch(advertsCreatedRejected(error))
+            }
+            throw error;
+        }
+    }
+}
+
+export function advertsDelete(advertToDelete: string): AppThunk<Promise<void>> {
+    return async function (dispatch, _getState, {api}) {
+        try {
+            dispatch(advertsDeletedPending())
+            const deletedAdvert = await api.adverts.deleteAdvert(advertToDelete)
+            dispatch(advertsDeletedFulfilled(deletedAdvert.data))
+        } catch (error) {
+            if (error instanceof Error) {
+                dispatch(advertsDeletedRejected(error))
             }
             throw error;
         }
@@ -264,3 +307,6 @@ export type Actions =
 | AdvertsCreatedFulfilled
 | AdvertsCreatedPending
 | AdvertsCreatedRejected
+| AdvertsDeletedFulfilled
+| AdvertsDeletedPending
+| AdvertsDeletedRejected
