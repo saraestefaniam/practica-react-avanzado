@@ -1,4 +1,4 @@
-import { test, expect } from "vitest"
+
 import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLoginFulfilled, authLoginPending, authLoginRejected, uiResetError } from "../actions";
 
 test('should return and "auth/login/pending" action', () => {
