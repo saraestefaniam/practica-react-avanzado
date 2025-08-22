@@ -1,5 +1,5 @@
 import { test, expect } from "vitest"
-import { authLoginFulfilled, authLoginPending, authLoginRejected } from "../actions";
+import { advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, authLoginFulfilled, authLoginPending, authLoginRejected } from "../actions";
 
 test('should return and "auth/login/pending" action', () => {
     const expected = {type: "auth/login/pending"};
@@ -19,3 +19,23 @@ test('should return and "auth/login/fulfilled" action', () => {
     const result = authLoginFulfilled()
     expect(result).toEqual(expected)
 })
+
+test('should return and "adverts/loaded/fulfilled" action with empty adverts', () => {
+    const expected = {type: "adverts/loaded/fulfilled", payload: []}
+    const result = advertsLoadedFulfilled([])
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/loaded/pending" action', () => {
+    const expected = {type: "adverts/loaded/pending"}
+    const result = advertsLoadedPending()
+    expect(result).toEqual(expected)
+} )
+
+test('should return and "adverts/loaded/rejected" action with an Error', () => {
+    const error = new Error('Something went wrong')
+    const expected = {type: "adverts/loaded/rejected", payload: error}
+    const result = advertsLoadedRejected(error)
+    expect(result).toEqual(expected)
+})
+
