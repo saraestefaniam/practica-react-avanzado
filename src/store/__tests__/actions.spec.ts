@@ -1,5 +1,5 @@
 import { test, expect } from "vitest"
-import { advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, authLoginFulfilled, authLoginPending, authLoginRejected } from "../actions";
+import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLoginFulfilled, authLoginPending, authLoginRejected, uiResetError } from "../actions";
 
 test('should return and "auth/login/pending" action', () => {
     const expected = {type: "auth/login/pending"};
@@ -39,3 +39,86 @@ test('should return and "adverts/loaded/rejected" action with an Error', () => {
     expect(result).toEqual(expected)
 })
 
+test('should return and "adverts/created/fulfilled" action with empty adverts', () => {
+    const fakeAdvert = {id: "1", name: "", price: 0, sale: false, tags: []}
+    const expected = {type: "adverts/created/fulfilled", payload: fakeAdvert}
+    const result = advertsCreatedFulfilled(fakeAdvert)
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/created/pending action', () => {
+    const expected = {type: "adverts/created/pending"}
+    const result = advertsCreatedPending()
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/created/rejected" action with an Error', () => {
+    const error = new Error('Something went wrong')
+    const expected = {type: "adverts/created/rejected", payload: error}
+    const result = advertsCreatedRejected(error)
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/detail/fulfilled" action with an advert', () => {
+    const fakeAdvert = {id: "1", name: "", price: 0, sale: false, tags:[]}
+    const expected = {type: "adverts/detail/fulfilled", payload: fakeAdvert}
+    const result = advertsDetailFulfilled(fakeAdvert)
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/detail/pending" action', () => {
+    const expected = {type: "adverts/detail/pending"}
+    const result = advertsDetailPending()
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/detail/rejected" action', () => {
+    const error = new Error('Something went wrong')
+    const expected = {type: "adverts/detail/rejected", payload: error}
+    const result = advertsDetailRejected(error)
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/tags/fulfilled" with empty tags', () => {
+    const expected = {type: "adverts/tags/fulfilled", payload: []}
+    const result = advertsTagsFulfilled([])
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/tags/pending" action', () => {
+    const expected = {type: "adverts/tags/pending"}
+    const result = advertsTagsPending()
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/tags/rejected" action with an Error', () => {
+    const error = new Error('Something went wrong')
+    const expected = {type: "adverts/tags/rejected", payload: error}
+    const result = advertsTagsRejected(error)
+    expect(result).toEqual(expected)
+})
+
+test('should return "adverts/deleted/fulfilled" action with an empty advert', () => {
+    const expected = {type: "adverts/deleted/fulfilled", payload: ""}
+    const result = advertsDeletedFulfilled("")
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/deleted/pending" action', () => {
+    const expected = {type: "adverts/deleted/pending"}
+    const result = advertsDeletedPending()
+    expect(result).toEqual(expected)
+})
+
+test('should return and "adverts/deleted/rejected" action with and Error', () => {
+    const error = new Error('Something went wrong')
+    const expected = {type: "adverts/deleted/rejected", payload: error}
+    const result = advertsDeletedRejected(error)
+    expect(result).toEqual(expected)
+})
+
+test('should return and "ui/reset-error" action', () => {
+    const expected = {type: "ui/reset-error"}
+    const result = uiResetError()
+    expect(result).toEqual(expected)
+})
