@@ -1,5 +1,4 @@
-
-import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLoginFulfilled, authLoginPending, authLoginRejected, uiResetError } from "../actions";
+import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLogin, authLoginFulfilled, authLoginPending, authLoginRejected, uiResetError } from "../actions";
 
 test('should return and "auth/login/pending" action', () => {
     const expected = {type: "auth/login/pending"};
@@ -121,4 +120,41 @@ test('should return and "ui/reset-error" action', () => {
     const expected = {type: "ui/reset-error"}
     const result = uiResetError()
     expect(result).toEqual(expected)
+})
+
+//test thunks
+describe('authLogin', () => {
+    afterEach(() => {
+        dispatchMock.mockClear()
+    })
+    const credentials = {email: "Sara@email.com", password: "1234"}
+    const thunk = authLogin(credentials)
+    const dispatchMock = vi.fn()
+    const api = {
+        auth: {
+            login: vi.fn()
+        }
+    }
+
+    test('when login resolves', async () => {
+        api.auth.login = vi.fn().mockResolvedValue(undefined)
+        //@ts-expect-error: no need getState
+        await thunk(dispatchMock, undefined, {api})
+
+        expect(dispatchMock).toHaveBeenCalledTimes(2)
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, { type: "auth/login/pending"})
+        expect(dispatchMock).toHaveBeenNthCalledWith(2, { type: "auth/login/fulfilled"})
+        expect(api.auth.login).toHaveBeenCalledWith(credentials)
+    })
+
+    test('when login rejects', async () => {
+        const error = new Error('Unauthorized')
+        api.auth.login = vi.fn().mockRejectedValue(error)
+        //@ts-expect-error: no need getState
+        await thunk(dispatchMock, undefined, {api})
+
+        expect(dispatchMock).toHaveBeenCalledTimes(2)
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "auth/login/pending"})
+        expect(dispatchMock).toHaveBeenNthCalledWith(2, {type: "auth/login/rejected", payload: error})
+    })
 })
