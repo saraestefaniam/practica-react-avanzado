@@ -207,7 +207,9 @@ describe('advertsLoaded', () => {
     test('when advertsLoaded rejects', async () => {
         const error = new Error('unauthorized')
         api.adverts.getAdverts = vi.fn().mockRejectedValue(error)
-        await thunk(dispatchMock, getStateMock, {api})
+        await expect(() => 
+            thunk(dispatchMock, getStateMock, {api})
+        ).rejects.toThrowError(error)
 
         expect(dispatchMock).toHaveBeenCalledTimes(2)
         expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "adverts/loaded/pending"})
