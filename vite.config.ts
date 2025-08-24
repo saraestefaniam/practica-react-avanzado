@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   test: {globals: true, coverage: {
     provider: "v8"
-  }}
+  },
+  environment: "jsdom",
+  setupFiles: "./vitest.setup.ts"
+}
 });
