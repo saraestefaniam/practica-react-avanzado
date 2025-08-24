@@ -3,11 +3,12 @@ import userEvent from "@testing-library/user-event";
 import LoginPage from "../login-page";
 import { Provider } from "react-redux";
 import { authLogin } from "../../../store/actions";
+import type { RootState } from "../../../store";
 
 vi.mock("../../../store/actions");
 
 describe("LoginPage", () => {
-  const state = {
+  const state: RootState = {
     auth: false,
     adverts: {
       loaded: false,
@@ -23,8 +24,11 @@ describe("LoginPage", () => {
     },
   };
 
-  const renderComponent = () =>
-    render(
+  const renderComponent = (error?: Error) => {
+    if (error) {
+      state.ui.error = error;
+    }
+    return render(
       <Provider
         store={{
           getState: () => state,
@@ -37,6 +41,7 @@ describe("LoginPage", () => {
         <LoginPage />
       </Provider>,
     );
+  };
 
   test("should render", () => {
     const { container } = renderComponent();
@@ -65,5 +70,14 @@ describe("LoginPage", () => {
       email: "sara@example.com",
       password: "1234",
     });
+  });
+
+  test("should render error", () => {
+    const error = new Error("Wrong email or password");
+    const { container } = renderComponent(error);
+    expect(container).toMatchSnapshot();
+
+    const alert = screen.getByRole("alert")
+    expect(alert).toHaveTextContent(error.message)
   });
 });

@@ -92,3 +92,102 @@ exports[`LoginPage > should render 1`] = `
   </div>
 </div>
 `;
+
+exports[`LoginPage > should render error 1`] = `
+<div>
+  <div
+    class="flex justify-center items-center min-h-screen bg-gray-100 p-4"
+  >
+    <div
+      class="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-md"
+    >
+      <h1
+        class="text-3xl font-bold text-gray-800 mb-6 text-center"
+      >
+        Login on Nodepop
+      </h1>
+      <form>
+        <div
+          class="mb-4"
+        >
+          <div>
+            <label>
+              <span>
+                email
+              </span>
+              <input
+                autocomplete="off"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                        placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required=""
+                type="email"
+                value=""
+              />
+            </label>
+          </div>
+          <br />
+          <div>
+            <label>
+              <span>
+                password
+              </span>
+              <input
+                autocomplete="off"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                        placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required=""
+                type="password"
+                value=""
+              />
+            </label>
+          </div>
+        </div>
+        <label>
+          <input
+            class="form-radio h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+            type="checkbox"
+          />
+          <span
+            class="ml-2 text-sm text-gray-700"
+          >
+            Remember me
+          </span>
+        </label>
+        <button
+          class="
+              w-full
+              inline-flex
+              justify-center
+              py-3
+              px-4
+              border
+              border-transparent
+              rounded-md
+              shadow-sm
+              text-lg
+              font-semibold
+              text-white
+              bg-indigo-600
+              hover:bg-indigo-800
+              focus:outline-none
+              focus:ring-2
+              focus:ring-offset-2
+              focus:ring-indigo-500
+              transition-colors duration-200
+            "
+          disabled=""
+          type="submit"
+        >
+          Login
+        </button>
+        <p
+          class="text-red-500 mt-2"
+          role="alert"
+        >
+          Wrong email or password
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+`;

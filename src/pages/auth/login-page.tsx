@@ -100,7 +100,7 @@ const LoginPage = () => {
             ">
               {pending ? "Login in..." : "Login"}
           </button>
-          {error && <p className="text-red-500 mt-2">{error.message}</p>}
+          {error && <p className="text-red-500 mt-2" role="alert">{error.message}</p>}
         </form>
       </div>
     </div>
