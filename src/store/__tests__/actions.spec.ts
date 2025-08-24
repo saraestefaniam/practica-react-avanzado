@@ -1,4 +1,5 @@
-import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLogin, authLoginFulfilled, authLoginPending, authLoginRejected, uiResetError } from "../actions";
+import { advertsCreatedFulfilled, advertsCreatedPending, advertsCreatedRejected, advertsDeletedFulfilled, advertsDeletedPending, advertsDeletedRejected, advertsDetailFulfilled, advertsDetailPending, advertsDetailRejected, advertsLoaded, advertsLoadedFulfilled, advertsLoadedPending, advertsLoadedRejected, advertsTagsFulfilled, advertsTagsPending, advertsTagsRejected, authLogin, authLoginFulfilled, authLoginPending, authLoginRejected, authLogout, uiResetError } from "../actions";
+import { defaultState } from "../reducer";
 
 test('should return and "auth/login/pending" action', () => {
     const expected = {type: "auth/login/pending"};
@@ -156,5 +157,60 @@ describe('authLogin', () => {
         expect(dispatchMock).toHaveBeenCalledTimes(2)
         expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "auth/login/pending"})
         expect(dispatchMock).toHaveBeenNthCalledWith(2, {type: "auth/login/rejected", payload: error})
+    })
+})
+
+describe('authLogout', () => {
+    const thunk = authLogout()
+    const dispatchMock = vi.fn()
+    const api = {
+        auth: {
+            logout: vi.fn()
+        }
+    }
+
+    test('when logout resolves', async () => {
+        api.auth.logout = vi.fn().mockResolvedValue(undefined)
+        //@ts-expect-error: no need getState
+        await thunk(dispatchMock, undefined, {api})
+
+        expect(dispatchMock).toHaveBeenCalledTimes(1)
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "auth/logout"})
+    })
+})
+
+describe('advertsLoaded', () => {
+    afterEach(() => {
+        dispatchMock.mockClear()
+    })
+    const dispatchMock = vi.fn()
+    const thunk = advertsLoaded()
+    const api = {
+        adverts: {
+            getAdverts: vi.fn()
+        }
+    } as any
+    const getStateMock = vi.fn(() => ({
+        ...defaultState,
+        adverts: {loaded: false, data: []}
+    }))
+
+    test('when advertsLoaded resolves', async () => {
+        api.adverts.getAdverts = vi.fn().mockResolvedValue({data: []})
+        await thunk(dispatchMock, getStateMock, {api})
+
+        expect(dispatchMock).toHaveBeenCalledTimes(2)
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "adverts/loaded/pending"})
+        expect(dispatchMock).toHaveBeenNthCalledWith(2, {type: "adverts/loaded/fulfilled", payload: []})
+    })
+
+    test('when advertsLoaded rejects', async () => {
+        const error = new Error('unauthorized')
+        api.adverts.getAdverts = vi.fn().mockRejectedValue(error)
+        await thunk(dispatchMock, getStateMock, {api})
+
+        expect(dispatchMock).toHaveBeenCalledTimes(2)
+        expect(dispatchMock).toHaveBeenNthCalledWith(1, {type: "adverts/loaded/pending"})
+        expect(dispatchMock).toHaveBeenNthCalledWith(2, {type: "adverts/loaded/rejected", payload: error})
     })
 })

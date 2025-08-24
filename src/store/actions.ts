@@ -216,7 +216,7 @@ export function advertsLoaded(): AppThunk<Promise<void>> {
             if (error instanceof Error) {
                 dispatch(advertsLoadedRejected(error))
             }
-            throw error;
+            //throw error;
         }
     }
 }
